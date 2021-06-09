@@ -354,6 +354,9 @@ int Table::select(std::string query, std::vector<std::vector<std::string>>& reco
           isNumericalComparison = false;
           if (isOperator(str)) {
               logic = str;
+              for_each(logic.begin(), logic.end(), [](char& c) {
+                  c = toupper(c); // convert logic to uppercase
+              });
               if (logic == "==" || logic == "=" || logic == "<" || logic == "<=" || logic == ">=" || logic == ">" || logic == "!=") {
                   isNumericalComparison = false; // these operators are for strings
               }
@@ -577,7 +580,6 @@ int Table::select(std::string query, std::vector<std::vector<std::string>>& reco
               else if (str == "|") {
                   it = set_union(operand1.begin(), operand1.end(), operand2.begin(), operand2.end(), combined.begin());
                   combined.resize(it-combined.begin());
-                  
                   toBeCombined.push(combined);
               }
           }
