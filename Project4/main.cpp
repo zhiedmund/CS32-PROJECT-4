@@ -8,6 +8,12 @@
 #include <iostream>
 #include "Table.h"
 #include <cassert>
+#include <string>
+#include <algorithm>
+#include <ctype.h>
+#include <iostream>
+#include <cstdlib>
+#include <stack>
 using namespace std;
 
 void testInsert() {
