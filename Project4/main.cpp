@@ -106,6 +106,7 @@ void testBonus() {
            (v[0] == expected[1]  &&  v[1] == expected[0]) );
     
     assert(t.select("( location == Westwood | location == Hollywood | location == 'Santa Monica' ) '&' price LT 100", v) == 0);
+    cout << v.size() << endl;
     assert(v.size() == 3);
     assert(t.select("( location == Westwood | ) '&' price LT 100", v) == -1);
     assert(v.size() == 0);
