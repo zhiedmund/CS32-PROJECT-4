@@ -48,6 +48,7 @@ void testSelect() {
     assert(t.insert("coffee 7.99"));
     assert(t.insert("hummus 3.49"));
     vector<vector<string>> v;
+//    assert(t.select("price LT 5.", v) == 0);
     assert(t.select("price LT 5", v) == 0);
     assert(v.size() == 2);  // chocolate bar and hummus
     assert(t.insert("pretzels 1.W9"));
@@ -103,24 +104,57 @@ void testBonus() {
     };
     assert((v[0] == expected[0]  &&  v[1] == expected[1])  ||
            (v[0] == expected[1]  &&  v[1] == expected[0]) );
+    
+    assert(t.select("( location == Westwood | location == Hollywood | location == 'Santa Monica' ) '&' price LT 100", v) == 0);
+    assert(v.size() == 3);
+    assert(t.select("( location == Westwood | ) '&' price LT 100", v) == -1);
+    assert(v.size() == 0);
+    assert(t.select("( location == Westwood ) '&' price LT 100", v) == 0);
     assert(t.select("( location == Westwood | location == Hollywood ) '&' price LT 100", v) == 0);
+
     assert(v.size() == 2);
     expected = {
         { "O'Reilly", "34567", "4.99", "Westwood" },
-        { "Patel", "12345", "45.54", "Westwood" }
+        { "Patel", "12345", "42.54", "Westwood" }
     };
-
-//    assert((v[0] == expected[0]  &&  v[1] == expected[1])  ||
-//           (v[0] == expected[1]  &&  v[1] == expected[0]) );
+    assert((v[0] == expected[0]  &&  v[1] == expected[1])  ||
+           (v[0] == expected[1]  &&  v[1] == expected[0]) );
     assert(t.select("(customer = Patel)", v) == -1);
     assert(t.select("product = 12345 location != Westwood", v) == -1);
     assert(t.select("location = ( Westwood | Hollywood )", v) == -1);
-  
+    assert(t.select("", v) == -1);
+    assert(t.select( " ", v) == -1);
+    assert(t.select(" location < ", v) == -1);
+    assert(t.select(" location Westwood", v) == -1);
+    assert(t.select("location < < ", v) == -1);
+    assert(t.select("location < Westwood <", v) == -1);
+    assert(t.select(" location Westwood = ", v) == -1);
+
     assert(t.select("customer = Patel", v) == 0);
+    assert(t.select("customer = Edmund", v) == 0);
+    assert(v.size() == 0);
     assert(t.select("( customer = Patel ')'", v) == 0);
     assert(t.select("price GE 20  &  location != Westwood", v) == 0);
-//
-    
+
+}
+
+void testEdgeCases() {
+    vector<string> cols = { "&", "|", "(", ")" };
+    Table t("&", cols);
+    assert(!t.good());
+    assert(!t.insert("Patel 12345 42.54 Westwood"));
+    cols = { "customer", "product", "price", "location" };
+    Table t2("test", cols);
+    assert(!t2.good());
+    assert(!t2.insert("Patel 12345 42.54 Westwood"));
+    cols = { };
+    Table t3("test", cols);
+    assert(!t3.good());
+    assert(!t3.insert("Patel 12345 42.54 Westwood"));
+    vector<vector<string>> v;
+    assert(t3.select("", v) == -1);
+    assert(t3.select("location < ", v) == -1);
+    assert(t3.select("location Westwood", v) == -1);
 }
 
 int main() {
@@ -129,6 +163,7 @@ int main() {
     testSelect();
     test3();
     testBonus();
+    testEdgeCases();
     cerr << "Passed All Tests" << endl;
 }
 

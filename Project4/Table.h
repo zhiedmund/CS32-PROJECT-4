@@ -13,7 +13,7 @@
 
 using namespace std;
 
-const int MAX_BUCKETS = 1000;
+const int MAX_BUCKETS = 997; // largest prime closest to 1000 to create less collisions
 
 class Table
     {

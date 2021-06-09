@@ -261,6 +261,12 @@ bool isBooleanOperator(string str) {
     return str == "&" || str == "|";
 }
 
+bool isEntryOrCloseParen(string str) {
+    return (!isOperator(str) && !isBooleanOperator(str) && (str != "(")) || (str == ")");
+    // if its an entry, its not an operator or open parenthesis. 
+}
+
+
 int Table::select(std::string query, std::vector<std::vector<std::string>>& records) const  {
     if (!good()) {
         return -1;
@@ -287,9 +293,11 @@ int Table::select(std::string query, std::vector<std::vector<std::string>>& reco
     {
         string str = infix[k];
         if (str == "(") {
+            if(isEntryOrCloseParen(prevstr)) return RET_INVALID_EXPRESSION;
             operatorStack.push(str);
         }
         else if (str == ")") {
+            if(!isEntryOrCloseParen(prevstr)) return RET_INVALID_EXPRESSION;
             for (;;)
             {
                 if (operatorStack.empty())
@@ -302,6 +310,8 @@ int Table::select(std::string query, std::vector<std::vector<std::string>>& reco
             }
         }
         else if (str == "&" || str == "|" || isOperator(str)) {
+            if(!isEntryOrCloseParen(prevstr)) return RET_INVALID_EXPRESSION;
+            
             while ( ! operatorStack.empty()  &&
                        precedence(str) <= precedence(operatorStack.top()) )
             {
@@ -311,14 +321,18 @@ int Table::select(std::string query, std::vector<std::vector<std::string>>& reco
             operatorStack.push(str);
         }
         else {
+//            if ((!isOperator(prevstr) && !isBooleanOperator(prevstr) && (prevstr != "(")) || (prevstr == ")"))  {
+//                return -1;
+//            }
+            if(isEntryOrCloseParen(prevstr)) return RET_INVALID_EXPRESSION;
             postfix.push_back(str);
         }
         prevstr = str;
     }
       // end of expression; pop remaining operators
 
-//    if ( ! isLetterOrCloseParen(prevstr))
-//        return RET_INVALID_EXPRESSION;
+    if(!isEntryOrCloseParen(prevstr)) return RET_INVALID_EXPRESSION;
+    
     while ( ! operatorStack.empty())
     {
         string s = operatorStack.top();
@@ -349,9 +363,15 @@ int Table::select(std::string query, std::vector<std::vector<std::string>>& reco
               else if (logic == "&" || logic == "|") {
                   return RET_INVALID_EXPRESSION;
               }
+              if(operandStack.empty()) {
+                  return -1;
+              }
               valueToCompare = operandStack.top();
               operandStack.pop();
               if (isNumericalComparison && !stringToDouble(valueToCompare, temp)) { //if we are making a numerical comparison but valueToCompare is not a number, invalid query
+                  return -1;
+              }
+              if(operandStack.empty()) {
                   return -1;
               }
               column = operandStack.top();
@@ -564,7 +584,7 @@ int Table::select(std::string query, std::vector<std::vector<std::string>>& reco
           else {
               operandStack.push(str);
           }
-    }
+      }
     if (toBeCombined.size() != 1)  // Impossible!
         return RET_INVALID_EXPRESSION;  // pretend it's an invalid expression
     records = toBeCombined.top(); // replaces records with the combined vector
