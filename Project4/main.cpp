@@ -111,8 +111,11 @@ void testBonus() {
     assert((v[0] == expected[0]  &&  v[1] == expected[1])  ||
            (v[0] == expected[1]  &&  v[1] == expected[0]) );
     
-    assert(t.select("( location == Westwood | location == Hollywood | location == 'Santa Monica' ) '&' price LT 100", v) == 0);
     
+    
+    assert(t.select("( location == Westwood | location == Hollywood | location == 'Santa Monica' ) '&' price LT 100", v) == 0);
+    assert(t.select("price LT 100 | location == 'Santa Monica'", v) == 0);
+    assert(t.select("( location == Westwood | location == Hollywood | location == 'Santa Monica' ) '|' price LT 100", v) == 0);
     cout << v.size() << endl;
     for (int i = 0; i < v.size(); i++) {
         for (int j = 0; j < v[i].size(); j++) {

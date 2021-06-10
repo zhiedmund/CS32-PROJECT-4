@@ -557,7 +557,7 @@ int Table::select(std::string query, std::vector<std::vector<std::string>>& reco
                   }
               }
 //              if (!fromTable.empty())
-                  toBeCombined.push(fromTable); //may not be correct
+                  toBeCombined.push(fromTable);
           }
           else if (isBooleanOperator(str)) {
               if (toBeCombined.empty()) {
@@ -565,11 +565,13 @@ int Table::select(std::string query, std::vector<std::vector<std::string>>& reco
               }
               vector<vector<string>> operand1 = toBeCombined.top();
               toBeCombined.pop();
+              std::sort(operand1.begin(), operand1.end());
               if (toBeCombined.empty()) {
                   return RET_INVALID_EXPRESSION;
               }
               vector<vector<string>> operand2 = toBeCombined.top();
               toBeCombined.pop();
+              std::sort(operand2.begin(), operand2.end());
               vector<vector<string>> combined(operand1.size()+operand2.size());
               vector<vector<string>>::iterator it;
               if (str == "&") {
