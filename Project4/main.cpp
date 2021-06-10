@@ -114,26 +114,10 @@ void testBonus() {
     
     
     assert(t.select("( location == Westwood | location == Hollywood | location == 'Santa Monica' ) '&' price LT 100", v) == 0);
+    assert(v.size() == 3);
     assert(t.select("price LT 100 | location == 'Santa Monica'", v) == 0);
     assert(t.select("( location == Westwood | location == Hollywood | location == 'Santa Monica' ) '|' price LT 100", v) == 0);
-    cout << v.size() << endl;
-    for (int i = 0; i < v.size(); i++) {
-        for (int j = 0; j < v[i].size(); j++) {
-            cout << v[i][j] << " ";
-        }
-        cout << endl;
-    }
-    
     assert(t.select("( location == Westwood | location == Hollywood | location == 'Santa Monica' )", v) == 0);
-
-    cout << v.size() << endl;
-    for (int i = 0; i < v.size(); i++) {
-        for (int j = 0; j < v[i].size(); j++) {
-            cout << v[i][j] << " ";
-        }
-        cout << endl;
-    }
-//    assert(v.size() == 3);
     assert(t.select("( location == Westwood | ) '&' price LT 100", v) == -1);
     assert(v.size() == 0);
     assert(t.select("( location == Westwood ) '&' price LT 100", v) == 0);
