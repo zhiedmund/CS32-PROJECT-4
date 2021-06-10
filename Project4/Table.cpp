@@ -191,7 +191,8 @@ void Table::find(std::string key, std::vector<std::vector<std::string>>& records
     string tempKey = key;
     int bucket = hashFunction(tempKey); //find the bucket of this key
     for (int i = 0; i < m_buckets[bucket].size(); i++) { // for each item in the bucket
-        if (std::find(m_buckets[bucket][i].begin(), m_buckets[bucket][i].end(), key) != m_buckets[bucket][i].end()) { // if that item contains the key word
+        if (m_buckets[bucket][i][m_indexOfKey] == key) {
+//        if (std::find(m_buckets[bucket][i].begin(), m_buckets[bucket][i].end(), key) != m_buckets[bucket][i].end()) { // if that item contains the key word
             fromTable.push_back(m_buckets[bucket][i]); // add to fromTable
         }
     }

@@ -268,6 +268,7 @@ void test3() {
     assert(t.insert("O'Reilly 34567     4.99 Westwood   "));
     assert(t.insert("   Hoang  12345 30.46 'Santa Monica' "));
     assert(t.insert("Patel\t67890\t142.75  \t \t\t  \tHollywood"));
+    
     assert(!t.insert("Figueroa 54321 59.95"));
     vector<vector<string>> v;
     t.find("Patel", v);
