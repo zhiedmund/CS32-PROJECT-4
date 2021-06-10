@@ -64,7 +64,7 @@ void testSelect() {
     assert(v.size() == 2);  // chocolate bar and hummus
 }
 
-void test3() {
+void test8() {
     vector<string> cols = { "N", "Z" };
     Table t("Z", cols);
     assert(t.good());
@@ -113,47 +113,50 @@ void testBonus() {
 
     assert(t.select("( location == Westwood | location == Hollywood | location == 'Santa Monica' ) '&' price LT 100", v) == 0);
     assert(v.size() == 3);
-    cout << v.size() << endl;
-    for (int i = 0; i < v.size(); i++) {
-        for (int j = 0; j < v[i].size(); j++) {
-            cout << v[i][j] << " ";
-        }
-        cout << endl;
-    }
+    
+    assert(t.select("( location == Westwood | location == Hollywood | location == 'Santa Monica' ) '&' price LT 0", v) == 0);
+    assert(v.size() == 0);
+//    cout << v.size() << endl;
+//    for (int i = 0; i < v.size(); i++) {
+//        for (int j = 0; j < v[i].size(); j++) {
+//            cout << v[i][j] << " ";
+//        }
+//        cout << endl;
+//    }
     assert(t.select("price LT 100 | location == 'Santa Monica'", v) == 0);
-    cout << v.size() << endl;
-    for (int i = 0; i < v.size(); i++) {
-        for (int j = 0; j < v[i].size(); j++) {
-            cout << v[i][j] << " ";
-        }
-        cout << endl;
-    }
+//    cout << v.size() << endl;
+//    for (int i = 0; i < v.size(); i++) {
+//        for (int j = 0; j < v[i].size(); j++) {
+//            cout << v[i][j] << " ";
+//        }
+//        cout << endl;
+//    }
     assert(t.select("( location == Westwood | location == Hollywood | location == 'Santa Monica' ) '|' price LT 100", v) == 0);
-    cout << v.size() << endl;
-    for (int i = 0; i < v.size(); i++) {
-        for (int j = 0; j < v[i].size(); j++) {
-            cout << v[i][j] << " ";
-        }
-        cout << endl;
-    }
+//    cout << v.size() << endl;
+//    for (int i = 0; i < v.size(); i++) {
+//        for (int j = 0; j < v[i].size(); j++) {
+//            cout << v[i][j] << " ";
+//        }
+//        cout << endl;
+//    }
     assert(t.select("( location == Westwood | location == Hollywood | location == 'Santa Monica' )", v) == 0);
-    cout << v.size() << endl;
-    for (int i = 0; i < v.size(); i++) {
-        for (int j = 0; j < v[i].size(); j++) {
-            cout << v[i][j] << " ";
-        }
-        cout << endl;
-    }
+//    cout << v.size() << endl;
+//    for (int i = 0; i < v.size(); i++) {
+//        for (int j = 0; j < v[i].size(); j++) {
+//            cout << v[i][j] << " ";
+//        }
+//        cout << endl;
+//    }
     assert(t.select("( location == Westwood | ) '&' price LT 100", v) == -1);
     assert(v.size() == 0);
     assert(t.select("( location == Westwood ) '&' price LT 100", v) == 0);
-    cout << v.size() << endl;
-    for (int i = 0; i < v.size(); i++) {
-        for (int j = 0; j < v[i].size(); j++) {
-            cout << v[i][j] << " ";
-        }
-        cout << endl;
-    }
+//    cout << v.size() << endl;
+//    for (int i = 0; i < v.size(); i++) {
+//        for (int j = 0; j < v[i].size(); j++) {
+//            cout << v[i][j] << " ";
+//        }
+//        cout << endl;
+//    }
     assert(t.select("( location == Westwood | location == Hollywood ) '&' price LT 100", v) == 0);
 
     assert(v.size() == 2);
@@ -220,7 +223,7 @@ void test1() {
     vector<string> cols = {
         "customer", "product", "price", "location"
     };
-    Table t("customer", cols);
+    Table t("product", cols);
     assert(t.good());
     assert(t.insert("Patel 12345 42.54 Westwood"));
     assert(t.insert("O'Reilly 34567     4.99 Westwood   "));
@@ -228,15 +231,14 @@ void test1() {
     assert(t.insert("Patel\t67890\t142.75  \t \t\t  \tHollywood"));
     assert(!t.insert("Figueroa 54321 59.95"));
     vector<vector<string>> v;
-    t.find("Patel", v);
+    t.find("12345", v);
     assert(v.size() == 2);
     vector<vector<string>> expected = {
         { "Patel", "12345", "42.54", "Westwood" },
-        { "Patel", "67890", "142.75", "Hollywood" }
+        { "Hoang", "12345", "30.46", "Santa Monica" }
     };
     assert((v[0] == expected[0] && v[1] == expected[1]) ||
         (v[0] == expected[1] && v[1] == expected[0]));
-    //cout << "Test 1 succeeded" << endl;
 }
 
 void test2() {
@@ -256,7 +258,7 @@ void test2() {
     //cout << "Test 2 succeeded" << endl;
 }
 
-void test8() {
+void test3() {
     vector<string> cols = {
         "customer", "product", "price", "location"
     };

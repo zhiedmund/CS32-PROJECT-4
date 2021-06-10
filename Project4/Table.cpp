@@ -266,7 +266,6 @@ bool isEntryOrCloseParen(string str) {
     // if its an entry, its not an operator or open parenthesis. 
 }
 
-
 int Table::select(std::string query, std::vector<std::vector<std::string>>& records) const  {
     if (!good()) {
         return -1;
@@ -556,7 +555,6 @@ int Table::select(std::string query, std::vector<std::vector<std::string>>& reco
                       }
                   }
               }
-//              if (!fromTable.empty())
                   toBeCombined.push(fromTable);
           }
           else if (isBooleanOperator(str)) {
